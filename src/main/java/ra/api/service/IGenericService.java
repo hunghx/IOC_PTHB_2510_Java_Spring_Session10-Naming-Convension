@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface IGenericService <U,V, ID, E> {
     List<E> findAll();
-    E create(U u);
+    E create(U u) throws ResourcesNotFoundException;
     E update(V v, ID id) throws ResourcesNotFoundException;
     E findById(ID id) throws ResourcesNotFoundException;
     void delete(ID id) throws ResourcesNotFoundException;

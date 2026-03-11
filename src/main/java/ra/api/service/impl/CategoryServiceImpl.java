@@ -17,29 +17,37 @@ public class CategoryServiceImpl implements ICategoryService {
     private ICategoryRepository categoryRepository;
     @Override
     public List<CategoryDto> findAll() {
-        return List.of();
+       return categoryRepository.findAll()
+               .stream().map(CategoryDto::new)
+               .toList();
     }
 
     @Override
     public CategoryDto create(CategoryAdd categoryAdd) {
-        return null;
+        Category en = Category.builder()
+                .categoryName(categoryAdd.getCategoryName())
+                .description(categoryAdd.getDescription())
+                .status(categoryAdd.getStatus())
+                .build();
+        categoryRepository.save(en);
+        return new CategoryDto(en);
     }
 
     @Override
     public CategoryDto update(CategoryUpdate categoryUpdate, Long id) throws ResourcesNotFoundException {
         Category entity = categoryRepository.findById(id)
                 .orElseThrow(() -> new ResourcesNotFoundException("Category not found with id = "+id));
-        return null;
+
+        entity.setCategoryName(categoryUpdate.getCategoryName());
+        entity.setDescription(categoryUpdate.getDescription());
+        categoryRepository.save(entity);
+        return new CategoryDto(entity);
     }
 
     @Override
     public CategoryDto findById(Long id) throws ResourcesNotFoundException {
         Category entity = categoryRepository.findById(id).orElseThrow(() -> new ResourcesNotFoundException("Category not found with id = "+id));
-        return CategoryDto.builder()
-                .categoryId(entity.getCategoryId())
-                .categoryName(entity.getCategoryName())
-                .description(entity.getDescription())
-                .build();
+        return new CategoryDto(entity);
     }
 
     @Override
